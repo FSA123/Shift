@@ -86,8 +86,8 @@ export default function Onboarding() {
           <EnergyEnvironmentStep
             energy={formData.energyProfile}
             constraints={formData.constraints}
-            updateEnergy={(val) => setFormData({ ...formData, energyProfile: val })}
-            updateConstraints={(val) => setFormData({ ...formData, constraints: val })}
+            updateEnergy={(val: string) => setFormData({ ...formData, energyProfile: val })}
+            updateConstraints={(val: string[]) => setFormData({ ...formData, constraints: val })}
           />
         )}
 
@@ -204,7 +204,14 @@ function IdentityStep({ value, update }: { value: string; update: (val: string) 
 }
 
 // Step 3: Energy & Environment
-function EnergyEnvironmentStep({ energy, constraints, updateEnergy, updateConstraints }: any) {
+interface EnergyEnvironmentProps {
+  energy: string;
+  constraints: string[];
+  updateEnergy: (val: string) => void;
+  updateConstraints: (val: string[]) => void;
+}
+
+function EnergyEnvironmentStep({ energy, constraints, updateEnergy, updateConstraints }: EnergyEnvironmentProps) {
   const toggleConstraint = (c: string) => {
     if (constraints.includes(c)) updateConstraints(constraints.filter((x: string) => x !== c));
     else updateConstraints([...constraints, c]);

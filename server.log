@@ -8,38 +8,27 @@
 - Environments: .env
 
 ✓ Starting...
-✓ Ready in 3.1s
-○ Compiling / ...
- GET / 200 in 6.2s (compile: 5.8s, render: 392ms)
- GET /onboarding 200 in 1848ms (compile: 1793ms, render: 54ms)
- GET / 200 in 82ms (compile: 7ms, render: 75ms)
- GET /onboarding 200 in 113ms (compile: 68ms, render: 45ms)
+✓ Ready in 2.4s
+ GET / 200 in 3.1s (compile: 2.6s, render: 424ms)
+ GET /onboarding 200 in 199ms (compile: 165ms, render: 34ms)
+ GET / 200 in 109ms (compile: 6ms, render: 103ms)
+ GET /onboarding 200 in 30ms (compile: 4ms, render: 26ms)
 Onboarding data received: {
-  routine: { wake: '07:00', bed: '23:00' },
-  goals: [ 'Fitness', 'Productivity' ],
-  non_negotiables: [ 'Deep Work 9-11' ]
+  routine: { wake: '06:00', bed: '22:00' },
+  identity: 'The Elite Programmer',
+  energyProfile: 'Morning Lark',
+  constraints: [ 'Loud Office' ],
+  skills: { Coding: 1 },
+  non_negotiables: [ 'No meetings' ]
 }
- POST /api/onboarding 200 in 152ms (compile: 125ms, render: 26ms)
-Generating 30-day plan starting 2026-02-21T17:37:57.129Z
- POST /api/plans/generate 200 in 71ms (compile: 61ms, render: 10ms)
- GET /dashboard 200 in 563ms (compile: 527ms, render: 36ms)
- GET /api/plans/current 200 in 63ms (compile: 57ms, render: 6ms)
- GET /api/plans/current 200 in 10ms (compile: 5ms, render: 6ms)
- GET / 200 in 140ms (compile: 9ms, render: 131ms)
- GET /onboarding 200 in 61ms (compile: 8ms, render: 53ms)
-Onboarding data received: {
-  routine: { wake: '07:00', bed: '23:00' },
-  goals: [ 'Fitness', 'Productivity' ],
-  non_negotiables: [ 'Deep Work 9-11' ]
-}
- POST /api/onboarding 200 in 30ms (compile: 10ms, render: 21ms)
-Generating 30-day plan starting 2026-02-21T17:38:52.853Z
- POST /api/plans/generate 200 in 18ms (compile: 5ms, render: 13ms)
- GET /dashboard 200 in 53ms (compile: 6ms, render: 47ms)
- GET /api/plans/current 200 in 13ms (compile: 5ms, render: 8ms)
- GET /api/plans/current 200 in 12ms (compile: 4ms, render: 8ms)
-Pivoting schedule at 17:38 due to: Unexpected call
- POST /api/plans/pivot 200 in 117ms (compile: 98ms, render: 19ms)
-Updating task task-2 with: { status: 'COMPLETED' }
- PATCH /api/tasks/task-2 200 in 1329ms (compile: 1307ms, render: 22ms)
+ POST /api/onboarding 200 in 207ms (compile: 170ms, render: 38ms)
+Generating 30-day plan starting 2026-02-21T18:05:21.579Z for identity: The Elite Programmer
+ POST /api/plans/generate 200 in 133ms (compile: 121ms, render: 12ms)
+ GET /dashboard 200 in 133ms (compile: 104ms, render: 29ms)
+ GET /api/plans/current 200 in 113ms (compile: 102ms, render: 11ms)
+ GET /api/plans/current 200 in 15ms (compile: 6ms, render: 10ms)
+Updating task task-3 with: { status: 'COMPLETED', verificationNote: 'Code compiled.' }
+ PATCH /api/tasks/task-3 200 in 897ms (compile: 884ms, render: 14ms)
+Pivoting schedule at 18:05 due to: I am tired
+ POST /api/plans/pivot 200 in 77ms (compile: 68ms, render: 9ms)
 [?25h

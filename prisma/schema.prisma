@@ -13,7 +13,16 @@ model User {
   id              String   @id // Unique ID from Auth Provider
   email           String   @unique
   createdAt       DateTime @default(now())
-  onboardingData  Json?    // Stores current routine, sleep cycles, goals, non-negotiables
+
+  // Basic Onboarding
+  onboardingData  Json?    // Stores legacy routine, sleep cycles, goals, non-negotiables
+
+  // Life Audit / Deep Onboarding
+  identity        String?  // e.g., "The Elite Programmer"
+  energyProfile   String?  // e.g., "Morning Bird", "Night Owl"
+  constraints     Json?    // e.g., ["Loud Office", "Home Gym"]
+  skills          Json?    // e.g., { "Coding": 8, "Running": 5 }
+
   plans           UserPlan[]
 }
 
@@ -32,14 +41,15 @@ model UserPlan {
 }
 
 model DailySchedule {
-  id          String   @id @default(uuid())
-  planId      String
-  plan        UserPlan @relation(fields: [planId], references: [id])
-  date        DateTime
-  dayNumber   Int
-  summary     String?
-  status      ScheduleStatus @default(PENDING)
-  tasks       DailyTask[]
+  id            String   @id @default(uuid())
+  planId        String
+  plan          UserPlan @relation(fields: [planId], references: [id])
+  date          DateTime
+  dayNumber     Int
+  summary       String?
+  dailyStrategy String?  // "Daily Strategy" text summary
+  status        ScheduleStatus @default(PENDING)
+  tasks         DailyTask[]
 }
 
 model DailyTask {
@@ -55,6 +65,10 @@ model DailyTask {
   isNegotiable    Boolean @default(false)
   status          TaskStatus @default(PENDING)
   identityPoints  Int @default(0)
+
+  // Verification
+  verificationNote String?
+  verificationPhoto String? // URL to photo
 }
 
 enum PlanStatus {

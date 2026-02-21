@@ -8,27 +8,27 @@
 - Environments: .env
 
 ✓ Starting...
-✓ Ready in 2.4s
- GET / 200 in 3.1s (compile: 2.6s, render: 424ms)
- GET /onboarding 200 in 199ms (compile: 165ms, render: 34ms)
- GET / 200 in 109ms (compile: 6ms, render: 103ms)
- GET /onboarding 200 in 30ms (compile: 4ms, render: 26ms)
+✓ Ready in 3.2s
+ GET / 200 in 3.2s (compile: 2.7s, render: 447ms)
+ GET /onboarding 200 in 263ms (compile: 226ms, render: 37ms)
+ GET / 200 in 78ms (compile: 5ms, render: 73ms)
+ GET /onboarding 200 in 117ms (compile: 70ms, render: 47ms)
 Onboarding data received: {
+  duration: 90,
   routine: { wake: '06:00', bed: '22:00' },
   identity: 'The Elite Programmer',
+  identityElaboration: 'I want to ship a SaaS.',
+  struggles: [ 'Procrastination' ],
   energyProfile: 'Morning Lark',
   constraints: [ 'Loud Office' ],
   skills: { Coding: 1 },
   non_negotiables: [ 'No meetings' ]
 }
- POST /api/onboarding 200 in 207ms (compile: 170ms, render: 38ms)
-Generating 30-day plan starting 2026-02-21T18:05:21.579Z for identity: The Elite Programmer
- POST /api/plans/generate 200 in 133ms (compile: 121ms, render: 12ms)
- GET /dashboard 200 in 133ms (compile: 104ms, render: 29ms)
- GET /api/plans/current 200 in 113ms (compile: 102ms, render: 11ms)
- GET /api/plans/current 200 in 15ms (compile: 6ms, render: 10ms)
-Updating task task-3 with: { status: 'COMPLETED', verificationNote: 'Code compiled.' }
- PATCH /api/tasks/task-3 200 in 897ms (compile: 884ms, render: 14ms)
-Pivoting schedule at 18:05 due to: I am tired
- POST /api/plans/pivot 200 in 77ms (compile: 68ms, render: 9ms)
+ POST /api/onboarding 200 in 171ms (compile: 143ms, render: 29ms)
+Generating 90-day plan starting 2026-02-21T18:35:58.297Z for identity: The Elite Programmer
+Context: Struggles with Procrastination, Elaboration: I want to ship a SaaS.
+ POST /api/plans/generate 200 in 101ms (compile: 91ms, render: 10ms)
+ GET /dashboard 200 in 89ms (compile: 49ms, render: 40ms)
+ GET /api/plans/current 200 in 71ms (compile: 65ms, render: 6ms)
+ GET /api/plans/current 200 in 9ms (compile: 4ms, render: 5ms)
 [?25h

@@ -7,8 +7,11 @@ export default function Onboarding() {
   const router = useRouter();
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
+    duration: 30, // 30, 50, 90
     routine: { wake: '', bed: '' },
     identity: '',
+    identityElaboration: '', // "Who do you want to become?"
+    struggles: [] as string[], // "Current Struggles"
     energyProfile: 'Morning Lark',
     constraints: [] as string[],
     skills: {} as Record<string, number>,
@@ -16,7 +19,7 @@ export default function Onboarding() {
   });
   const [loading, setLoading] = useState(false);
 
-  const totalSteps = 5;
+  const totalSteps = 6;
 
   const nextStep = () => setStep(step + 1);
   const prevStep = () => setStep(step - 1);
@@ -31,14 +34,16 @@ export default function Onboarding() {
       });
 
       if (res.ok) {
-        // Trigger smart plan generation
+        // Trigger smart plan generation with detailed context
         await fetch('/api/plans/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            duration: 30,
+            duration: formData.duration,
             startDate: new Date().toISOString(),
-            identity: formData.identity // Pass identity to generator
+            identity: formData.identity,
+            identityElaboration: formData.identityElaboration,
+            struggles: formData.struggles
           }),
         });
 
@@ -69,36 +74,50 @@ export default function Onboarding() {
         </div>
 
         {step === 1 && (
+          <DurationStep
+            duration={formData.duration}
+            update={(d) => {
+              setFormData({ ...formData, duration: d });
+              nextStep(); // Auto-advance on selection
+            }}
+          />
+        )}
+
+        {step === 2 && (
           <RoutineStep
             data={formData.routine}
             update={(d) => setFormData({ ...formData, routine: { ...formData.routine, ...d } })}
           />
         )}
 
-        {step === 2 && (
+        {step === 3 && (
           <IdentityStep
             value={formData.identity}
-            update={(val) => setFormData({ ...formData, identity: val })}
-          />
-        )}
-
-        {step === 3 && (
-          <EnergyEnvironmentStep
-            energy={formData.energyProfile}
-            constraints={formData.constraints}
-            updateEnergy={(val: string) => setFormData({ ...formData, energyProfile: val })}
-            updateConstraints={(val: string[]) => setFormData({ ...formData, constraints: val })}
+            elaboration={formData.identityElaboration}
+            updateValue={(val) => setFormData({ ...formData, identity: val })}
+            updateElaboration={(val) => setFormData({ ...formData, identityElaboration: val })}
           />
         )}
 
         {step === 4 && (
+          <ContextStep
+            struggles={formData.struggles}
+            energy={formData.energyProfile}
+            constraints={formData.constraints}
+            updateStruggles={(val) => setFormData({ ...formData, struggles: val })}
+            updateEnergy={(val) => setFormData({ ...formData, energyProfile: val })}
+            updateConstraints={(val) => setFormData({ ...formData, constraints: val })}
+          />
+        )}
+
+        {step === 5 && (
           <SkillsStep
             skills={formData.skills}
             update={(val) => setFormData({ ...formData, skills: val })}
           />
         )}
 
-        {step === 5 && (
+        {step === 6 && (
           <NonNegotiablesStep
             items={formData.non_negotiables}
             update={(items) => setFormData({ ...formData, non_negotiables: items })}
@@ -115,14 +134,14 @@ export default function Onboarding() {
             </button>
           )}
 
-          {step < totalSteps ? (
+          {step < totalSteps && step !== 1 ? (
             <button
               onClick={nextStep}
               className="ml-auto px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white font-medium"
             >
               Next
             </button>
-          ) : (
+          ) : step === totalSteps ? (
             <button
               onClick={handleSubmit}
               disabled={loading}
@@ -130,14 +149,45 @@ export default function Onboarding() {
             >
               {loading ? 'Designing Plan...' : 'Build My Blueprint'}
             </button>
-          )}
+          ) : null}
         </div>
       </div>
     </main>
   );
 }
 
-// Step 1: Routine
+// Step 1: Duration
+function DurationStep({ duration, update }: { duration: number; update: (d: number) => void }) {
+    return (
+        <div>
+            <h2 className="text-2xl font-bold mb-4">Select Your Program</h2>
+            <p className="text-gray-400 mb-6">How long do you want to commit?</p>
+
+            <div className="grid gap-4">
+                {[30, 50, 90].map(d => (
+                    <button
+                        key={d}
+                        onClick={() => update(d)}
+                        className={`p-4 rounded-xl border-2 text-left transition-all ${
+                            duration === d
+                                ? 'bg-blue-600/20 border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.3)]'
+                                : 'bg-gray-700 border-gray-600 hover:bg-gray-600 hover:border-gray-500'
+                        }`}
+                    >
+                        <span className="text-xl font-bold block mb-1">{d} Days</span>
+                        <span className="text-sm text-gray-300 block">
+                            {d === 30 ? "Intense Sprint. High Accountability." :
+                             d === 50 ? "Habit Formation. Steady Progression." :
+                             "Mastery. Deep Transformation."}
+                        </span>
+                    </button>
+                ))}
+            </div>
+        </div>
+    )
+}
+
+// Step 2: Routine
 function RoutineStep({ data, update }: { data: { wake: string; bed: string }; update: (d: any) => void }) {
   return (
     <div>
@@ -168,20 +218,20 @@ function RoutineStep({ data, update }: { data: { wake: string; bed: string }; up
   );
 }
 
-// Step 2: Identity
-function IdentityStep({ value, update }: { value: string; update: (val: string) => void }) {
+// Step 3: Identity & Elaboration
+function IdentityStep({ value, elaboration, updateValue, updateElaboration }: { value: string; elaboration: string; updateValue: (v: string) => void; updateElaboration: (v: string) => void }) {
   const presets = ["The Elite Programmer", "The Hybrid Athlete", "The Serial Entrepreneur", "The Zen Master", "The Polymath"];
 
   return (
     <div>
       <h2 className="text-2xl font-bold mb-4">Choose Your Identity</h2>
-      <p className="text-gray-400 mb-6">Who are you becoming in the next 30 days?</p>
+      <p className="text-gray-400 mb-6">Who are you becoming?</p>
 
       <div className="grid gap-3 mb-4">
         {presets.map(p => (
             <button
                 key={p}
-                onClick={() => update(p)}
+                onClick={() => updateValue(p)}
                 className={`p-3 rounded border text-left transition-colors ${
                     value === p
                         ? 'bg-blue-600 border-blue-500 text-white'
@@ -192,26 +242,44 @@ function IdentityStep({ value, update }: { value: string; update: (val: string) 
             </button>
         ))}
       </div>
-      <input
-          type="text"
-          value={value}
-          onChange={(e) => update(e.target.value)}
-          placeholder="Or type your own..."
-          className="w-full p-3 bg-gray-700 rounded border border-gray-600 text-white focus:border-blue-500 outline-none"
+
+      <div className="space-y-3">
+        <input
+            type="text"
+            value={value}
+            onChange={(e) => updateValue(e.target.value)}
+            placeholder="Or type your own..."
+            className="w-full p-3 bg-gray-700 rounded border border-gray-600 text-white focus:border-blue-500 outline-none"
         />
+
+        <label className="block text-sm font-medium mt-4 mb-2 text-gray-300">Tell us more about this person...</label>
+        <textarea
+            value={elaboration}
+            onChange={(e) => updateElaboration(e.target.value)}
+            placeholder="e.g. I want to be disciplined, build a SaaS, and run a marathon. I admire David Goggins..."
+            className="w-full h-24 bg-gray-700 border border-gray-600 rounded p-3 text-white focus:border-blue-500 outline-none resize-none"
+        />
+      </div>
     </div>
   );
 }
 
-// Step 3: Energy & Environment
-interface EnergyEnvironmentProps {
+// Step 4: Context (Struggles, Energy, Environment)
+interface ContextProps {
+  struggles: string[];
   energy: string;
   constraints: string[];
+  updateStruggles: (val: string[]) => void;
   updateEnergy: (val: string) => void;
   updateConstraints: (val: string[]) => void;
 }
 
-function EnergyEnvironmentStep({ energy, constraints, updateEnergy, updateConstraints }: EnergyEnvironmentProps) {
+function ContextStep({ struggles, energy, constraints, updateStruggles, updateEnergy, updateConstraints }: ContextProps) {
+  const toggleStruggle = (s: string) => {
+      if (struggles.includes(s)) updateStruggles(struggles.filter(x => x !== s));
+      else updateStruggles([...struggles, s]);
+  }
+
   const toggleConstraint = (c: string) => {
     if (constraints.includes(c)) updateConstraints(constraints.filter((x: string) => x !== c));
     else updateConstraints([...constraints, c]);
@@ -222,6 +290,25 @@ function EnergyEnvironmentStep({ energy, constraints, updateEnergy, updateConstr
         <h2 className="text-2xl font-bold mb-4">Context Injection</h2>
 
         <div className="mb-6">
+            <label className="block text-sm font-medium mb-2 text-gray-300">Current Struggles</label>
+            <div className="grid grid-cols-2 gap-2">
+                {['Procrastination', 'Burnout', 'Lack of Focus', 'Inconsistency', 'Overwhelmed', 'Poor Sleep'].map(s => (
+                    <button
+                        key={s}
+                        onClick={() => toggleStruggle(s)}
+                        className={`p-2 rounded border text-sm text-left ${
+                            struggles.includes(s)
+                                ? 'bg-amber-900/50 border-amber-500 text-white'
+                                : 'bg-gray-700 border-gray-600 hover:bg-gray-600 text-gray-300'
+                        }`}
+                    >
+                        {s}
+                    </button>
+                ))}
+            </div>
+        </div>
+
+        <div className="mb-6">
             <label className="block text-sm font-medium mb-2 text-gray-300">Energy Peak</label>
             <div className="flex gap-4">
                 {['Morning Lark', 'Night Owl', 'Afternoon Power'].map(e => (
@@ -230,7 +317,7 @@ function EnergyEnvironmentStep({ energy, constraints, updateEnergy, updateConstr
                         onClick={() => updateEnergy(e)}
                         className={`flex-1 p-3 rounded border text-sm ${
                             energy === e
-                                ? 'bg-amber-600 border-amber-500 text-white'
+                                ? 'bg-blue-600 border-blue-500 text-white'
                                 : 'bg-gray-700 border-gray-600 hover:bg-gray-600 text-gray-300'
                         }`}
                     >
@@ -262,7 +349,7 @@ function EnergyEnvironmentStep({ energy, constraints, updateEnergy, updateConstr
   );
 }
 
-// Step 4: Skills
+// Step 5: Skills
 function SkillsStep({ skills, update }: { skills: Record<string, number>; update: (val: any) => void }) {
     const [newSkill, setNewSkill] = useState('');
 
@@ -318,7 +405,7 @@ function SkillsStep({ skills, update }: { skills: Record<string, number>; update
     )
 }
 
-// Step 5: Non-Negotiables
+// Step 6: Non-Negotiables
 function NonNegotiablesStep({ items, update }: { items: string[]; update: (i: string[]) => void }) {
   const [input, setInput] = useState('');
 

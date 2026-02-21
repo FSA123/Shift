@@ -17,12 +17,13 @@ type Task = {
 export default function Dashboard() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [dailyStrategy, setDailyStrategy] = useState('');
+  const [planInfo, setPlanInfo] = useState({ day: 1, totalDays: 30 }); // Default
   const [loading, setLoading] = useState(true);
   const [pivotReason, setPivotReason] = useState('');
   const [showPivot, setShowPivot] = useState(false);
   const [verifyingTask, setVerifyingTask] = useState<string | null>(null);
   const [verificationNote, setVerificationNote] = useState('');
-  const [identityPoints, setIdentityPoints] = useState(450); // Mock points
+  const [identityPoints, setIdentityPoints] = useState(0); // Day 1 starts at 0
 
   useEffect(() => {
     fetch('/api/plans/current')
@@ -30,6 +31,10 @@ export default function Dashboard() {
       .then((data) => {
         setTasks(data.todaySchedule.tasks || []);
         setDailyStrategy(data.todaySchedule.dailyStrategy || "Execute the plan.");
+        setPlanInfo({
+            day: data.todaySchedule.dayNumber || 1,
+            totalDays: data.durationDays || 30
+        });
         setLoading(false);
       });
   }, []);
@@ -124,7 +129,7 @@ export default function Dashboard() {
         <div className="max-w-3xl mx-auto">
             <div className="flex justify-between items-center mb-2">
                 <div>
-                    <h1 className="text-lg font-bold text-white">Day 5 of 30</h1>
+                    <h1 className="text-lg font-bold text-white">Day {planInfo.day} of {planInfo.totalDays}</h1>
                     <p className="text-xs text-blue-400 font-mono">IDENTITY POINTS: {identityPoints}</p>
                 </div>
                 <button

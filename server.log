@@ -8,14 +8,38 @@
 - Environments: .env
 
 ✓ Starting...
-✓ Ready in 1164ms
-Onboarding data received: { routine: {}, goals: [ 'fitness' ], non_negotiables: [] }
- POST /api/onboarding 200 in 817ms (compile: 773ms, render: 43ms)
-Generating 30-day plan starting 2023-10-27
- POST /api/plans/generate 200 in 212ms (compile: 194ms, render: 18ms)
- GET /api/plans/current 200 in 178ms (compile: 170ms, render: 8ms)
-Pivoting schedule at 14:30 due to: Meeting ran late
- POST /api/plans/pivot 200 in 169ms (compile: 158ms, render: 11ms)
-Updating task task-123 with: { status: 'COMPLETED' }
- PATCH /api/tasks/task-123 200 in 939ms (compile: 925ms, render: 14ms)
+✓ Ready in 3.1s
+○ Compiling / ...
+ GET / 200 in 6.2s (compile: 5.8s, render: 392ms)
+ GET /onboarding 200 in 1848ms (compile: 1793ms, render: 54ms)
+ GET / 200 in 82ms (compile: 7ms, render: 75ms)
+ GET /onboarding 200 in 113ms (compile: 68ms, render: 45ms)
+Onboarding data received: {
+  routine: { wake: '07:00', bed: '23:00' },
+  goals: [ 'Fitness', 'Productivity' ],
+  non_negotiables: [ 'Deep Work 9-11' ]
+}
+ POST /api/onboarding 200 in 152ms (compile: 125ms, render: 26ms)
+Generating 30-day plan starting 2026-02-21T17:37:57.129Z
+ POST /api/plans/generate 200 in 71ms (compile: 61ms, render: 10ms)
+ GET /dashboard 200 in 563ms (compile: 527ms, render: 36ms)
+ GET /api/plans/current 200 in 63ms (compile: 57ms, render: 6ms)
+ GET /api/plans/current 200 in 10ms (compile: 5ms, render: 6ms)
+ GET / 200 in 140ms (compile: 9ms, render: 131ms)
+ GET /onboarding 200 in 61ms (compile: 8ms, render: 53ms)
+Onboarding data received: {
+  routine: { wake: '07:00', bed: '23:00' },
+  goals: [ 'Fitness', 'Productivity' ],
+  non_negotiables: [ 'Deep Work 9-11' ]
+}
+ POST /api/onboarding 200 in 30ms (compile: 10ms, render: 21ms)
+Generating 30-day plan starting 2026-02-21T17:38:52.853Z
+ POST /api/plans/generate 200 in 18ms (compile: 5ms, render: 13ms)
+ GET /dashboard 200 in 53ms (compile: 6ms, render: 47ms)
+ GET /api/plans/current 200 in 13ms (compile: 5ms, render: 8ms)
+ GET /api/plans/current 200 in 12ms (compile: 4ms, render: 8ms)
+Pivoting schedule at 17:38 due to: Unexpected call
+ POST /api/plans/pivot 200 in 117ms (compile: 98ms, render: 19ms)
+Updating task task-2 with: { status: 'COMPLETED' }
+ PATCH /api/tasks/task-2 200 in 1329ms (compile: 1307ms, render: 22ms)
 [?25h

@@ -1,0 +1,21 @@
+
+> project-blueprint@0.1.0 dev
+> next dev -p 3000
+
+▲ Next.js 16.1.6 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+- Environments: .env
+
+✓ Starting...
+✓ Ready in 1164ms
+Onboarding data received: { routine: {}, goals: [ 'fitness' ], non_negotiables: [] }
+ POST /api/onboarding 200 in 817ms (compile: 773ms, render: 43ms)
+Generating 30-day plan starting 2023-10-27
+ POST /api/plans/generate 200 in 212ms (compile: 194ms, render: 18ms)
+ GET /api/plans/current 200 in 178ms (compile: 170ms, render: 8ms)
+Pivoting schedule at 14:30 due to: Meeting ran late
+ POST /api/plans/pivot 200 in 169ms (compile: 158ms, render: 11ms)
+Updating task task-123 with: { status: 'COMPLETED' }
+ PATCH /api/tasks/task-123 200 in 939ms (compile: 925ms, render: 14ms)
+[?25h

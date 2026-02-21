@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String   @id // Unique ID from Auth Provider
+  email           String   @unique
+  createdAt       DateTime @default(now())
+  onboardingData  Json?    // Stores current routine, sleep cycles, goals, non-negotiables
+  plans           UserPlan[]
+}
+
+model UserPlan {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id])
+  title         String?
+  startDate     DateTime
+  endDate       DateTime
+  durationDays  Int
+  status        PlanStatus @default(ACTIVE)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  schedules     DailySchedule[]
+}
+
+model DailySchedule {
+  id          String   @id @default(uuid())
+  planId      String
+  plan        UserPlan @relation(fields: [planId], references: [id])
+  date        DateTime
+  dayNumber   Int
+  summary     String?
+  status      ScheduleStatus @default(PENDING)
+  tasks       DailyTask[]
+}
+
+model DailyTask {
+  id              String   @id @default(uuid())
+  scheduleId      String
+  schedule        DailySchedule @relation(fields: [scheduleId], references: [id])
+  title           String
+  description     String?
+  startTime       DateTime // Using DateTime for simplicity, or could be String "HH:MM"
+  endTime         DateTime
+  durationMinutes Int
+  category        TaskCategory
+  isNegotiable    Boolean @default(false)
+  status          TaskStatus @default(PENDING)
+  identityPoints  Int @default(0)
+}
+
+enum PlanStatus {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+enum ScheduleStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+}
+
+enum TaskCategory {
+  SLEEP
+  WORK
+  GOAL
+  ROUTINE
+  BUFFER
+}
+
+enum TaskStatus {
+  PENDING
+  COMPLETED
+  SKIPPED
+}
